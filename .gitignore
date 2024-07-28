@@ -1,0 +1,18 @@
+# Environment variables
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLAlchemy DB
+*.db
+
+# Alembic
+# Include the Alembic folder and migration scripts
+# alembic/versions/ should be included to track migrations
+alembic/versions/*
+!alembic/env.py
+!alembic/script.py.mako
+!alembic.ini
