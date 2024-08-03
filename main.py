@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException, Depends
+import os
+
+from fastapi import FastAPI, HTTPException, Depends, Header
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from database import get_db
@@ -10,7 +12,13 @@ app = FastAPI()
 
 
 @app.post("/api/create_license")
-async def create_license_endpoint(request: CreateLicenseRequest, db: Session = Depends(get_db)):
+async def create_license_endpoint(request: CreateLicenseRequest,
+                                  db: Session = Depends(get_db),
+                                  authorization: str = Header(None)):
+    api_key = os.getenv('REG_API_KEY')
+    if api_key != authorization:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     tarabari_id = request.tarabari_id
     additional_days = request.additional_days
 
@@ -19,13 +27,18 @@ async def create_license_endpoint(request: CreateLicenseRequest, db: Session = D
         user = create_user(db, tarabari_id)
 
     license = create_license(db, tarabari_id, additional_days)
-
     return {"activation_code": license.activation_code,
             "message": "License created. Activate it to set expiry date."}
 
 
 @app.post("/api/activate_license")
-async def activate_license_endpoint(request: ActivateLicenseRequest, db: Session = Depends(get_db)):
+async def activate_license_endpoint(request: ActivateLicenseRequest,
+                                    db: Session = Depends(get_db),
+                                    authorization: str = Header(None)):
+    api_key = os.getenv('API_KEY')
+    if api_key != authorization:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     activation_code = request.activation_code
     hardware_unique_id = request.hardware_unique_id
 
@@ -56,7 +69,13 @@ async def activate_license_endpoint(request: ActivateLicenseRequest, db: Session
 
 
 @app.post("/api/validate_license")
-async def validate_license_endpoint(request: ValidateLicenseRequest, db: Session = Depends(get_db)):
+async def validate_license_endpoint(request: ValidateLicenseRequest,
+                                    db: Session = Depends(get_db),
+                                    authorization: str = Header(None)):
+    api_key = os.getenv('API_KEY')
+    if api_key != authorization:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     activation_code = request.activation_code
     hardware_unique_id = request.hardware_unique_id
     expiry_date = request.expiry_date
