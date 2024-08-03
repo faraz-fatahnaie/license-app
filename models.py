@@ -10,6 +10,7 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = 'user'
     user_id = Column(Integer, primary_key=True, index=True)
@@ -18,6 +19,7 @@ class User(Base):
     email = Column(String(120))
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
 
 class License(Base):
     __tablename__ = 'license'
@@ -32,5 +34,6 @@ class License(Base):
     hardware_unique_id = Column(String(120), nullable=True)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
 
 Base.metadata.create_all(bind=engine)
