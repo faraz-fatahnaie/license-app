@@ -1,6 +1,4 @@
-# crud.py
 from sqlalchemy.orm import Session
-from datetime import datetime
 import uuid
 from models import User, License
 
