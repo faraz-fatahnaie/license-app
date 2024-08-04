@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 # Define the API endpoint
@@ -9,6 +11,12 @@ payload = {
     "hardware_unique_id": "testCPU-testHardDrive",
     "expiry_date": "2024-08-07T16:50:13.813170"
 }
+
+api_key = os.getenv('API_KEY')
+
+headers = {'API_KEY': api_key,
+           'Content-Type': 'application/json'}
+response = requests.post(url, json=payload, headers=headers)
 
 # Send the POST request
 response = requests.post(url, json=payload)

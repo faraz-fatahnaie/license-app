@@ -1,3 +1,6 @@
+import hashlib
+import os
+
 import requests
 
 # Define the API endpoint
@@ -9,8 +12,11 @@ payload = {
     "additional_days": 10
 }
 
-# Send the POST request
-response = requests.post(url, json=payload)
+api_key = os.getenv('REG_API_KEY')
+
+headers = {'REG_API_KEY': api_key,
+           'Content-Type': 'application/json'}
+response = requests.post(url, json=payload, headers=headers)
 
 # Check the response
 if response.status_code == 200:

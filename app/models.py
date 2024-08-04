@@ -1,10 +1,15 @@
 # models.py
+import os
 from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
+from dotenv import load_dotenv
 
-DATABASE_URL = "postgresql://postgres:1234@localhost/license_db"  # Replace with your actual PostgreSQL URL
+load_dotenv()
+
+# Get the database URL from environment variables, with a fallback default
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -36,4 +41,5 @@ class License(Base):
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
+# Create tables in the database
 Base.metadata.create_all(bind=engine)
