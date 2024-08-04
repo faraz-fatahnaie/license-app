@@ -96,10 +96,6 @@ async def validate_license_endpoint(request: ValidateLicenseRequest,
     if api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    api_key = os.getenv('API_KEY')
-    if api_key != API_KEY:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
     activation_code = request.activation_code
     hardware_unique_id = request.hardware_unique_id
     expiry_date = request.expiry_date
