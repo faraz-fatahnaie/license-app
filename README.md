@@ -6,6 +6,8 @@
 
     ```sh
     DATABASE_URL="postgresql://user:password@localhost/license_db"
+    API_KEY="e8535b40a360e938330aaf7409e0b44def8778923c76318a7edd6ee3949b8b9b"
+    REG_API_KEY="1a3e2ad26b6a60e9bfd50a0c814c495d5cf1d0431a177db54b257df9928a54b2"
     ```
 
 ### Database Migrations
