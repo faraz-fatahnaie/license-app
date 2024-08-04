@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 import uuid
-from models import User, License
+from app.models import User, License
 
 
 def generate_unique_activation_code(db: Session):

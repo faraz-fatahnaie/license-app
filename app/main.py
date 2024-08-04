@@ -1,12 +1,12 @@
 import os
 
-from fastapi import FastAPI, HTTPException, Depends, Header, Request
+from fastapi import FastAPI, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-from database import get_db
-from schemas import CreateLicenseRequest, ActivateLicenseRequest, ValidateLicenseRequest
-from crud import create_user, create_license, get_user_by_tarabari_id, get_license_by_activation_code
-from utils import compare_dates
+from app.database import get_db
+from app.schemas import CreateLicenseRequest, ActivateLicenseRequest, ValidateLicenseRequest
+from app.crud import create_user, create_license, get_user_by_tarabari_id, get_license_by_activation_code
+from app.utils import compare_dates
 from dotenv import load_dotenv
 
 app = FastAPI()
@@ -17,8 +17,14 @@ load_dotenv()
 async def create_license_endpoint(request: CreateLicenseRequest,
                                   req: Request,
                                   db: Session = Depends(get_db)):
+    try:
+        REG_API_KEY = req.headers['REG_API_KEY']
+    except Exception as e:
+        print(f'Wrong Header: {e}')
+        raise HTTPException(status_code=401, detail="API key missing")
+
     api_key = str(os.getenv('REG_API_KEY'))
-    if api_key != req.headers['REG_API_KEY']:
+    if api_key != REG_API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     tarabari_id = request.tarabari_id
@@ -37,8 +43,14 @@ async def create_license_endpoint(request: CreateLicenseRequest,
 async def activate_license_endpoint(request: ActivateLicenseRequest,
                                     req: Request,
                                     db: Session = Depends(get_db)):
+    try:
+        API_KEY = req.headers['API_KEY']
+    except Exception as e:
+        print(f'Wrong Header: {e}')
+        raise HTTPException(status_code=401, detail="API key missing")
+
     api_key = os.getenv('API_KEY')
-    if api_key != req.headers['API_KEY']:
+    if api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     activation_code = request.activation_code
@@ -74,8 +86,18 @@ async def activate_license_endpoint(request: ActivateLicenseRequest,
 async def validate_license_endpoint(request: ValidateLicenseRequest,
                                     req: Request,
                                     db: Session = Depends(get_db)):
+    try:
+        API_KEY = req.headers['API_KEY']
+    except Exception as e:
+        print(f'Wrong Header: {e}')
+        raise HTTPException(status_code=401, detail="API key missing")
+
     api_key = os.getenv('API_KEY')
-    if api_key != req.headers['API_KEY']:
+    if api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    api_key = os.getenv('API_KEY')
+    if api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     activation_code = request.activation_code
@@ -93,6 +115,10 @@ async def validate_license_endpoint(request: ValidateLicenseRequest,
 
     if license.hardware_unique_id != hardware_unique_id:
         raise HTTPException(status_code=400, detail="License is activated on another device.")
+
+    if datetime.strptime(str(license.expiry_date), "%Y-%m-%d %H:%M:%S.%f").date() != \
+            datetime.fromisoformat(expiry_date).date():
+        raise HTTPException(status_code=400, detail="License file is broken.")
 
     activate_state, remaining_days = compare_dates(curr_datetime, expiry_date)
 
