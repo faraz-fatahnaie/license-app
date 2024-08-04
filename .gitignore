@@ -1,5 +1,5 @@
 # Environment variables
-.env
+app/.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,7 +12,7 @@ __pycache__/
 # Alembic
 # Include the Alembic folder and migration scripts
 # alembic/versions/ should be included to track migrations
-alembic/versions/*
-!alembic/env.py
-!alembic/script.py.mako
-!alembic.ini
+app/alembic/versions/*
+!app/alembic/env.py
+!app/alembic/script.py.mako
+!app/alembic.ini
