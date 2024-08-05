@@ -5,6 +5,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: license_db
+      TZ: "Asia/Tehran"
     ports:
       - "5433:5432"
     volumes:
@@ -20,6 +21,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://postgres:1234@db:5432/license_db
+      TZ: "Asia/Tehran"
     networks:
       - app-network
 
