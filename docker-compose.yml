@@ -17,11 +17,22 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "8080:8080"
     depends_on:
       - db
     environment:
       DATABASE_URL: postgresql://postgres:1234@db:5432/license_db
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./license-nginx.conf:/etc/nginx/license-nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - web
     networks:
       - app-network
 
