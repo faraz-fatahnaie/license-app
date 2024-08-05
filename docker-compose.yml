@@ -1,12 +1,12 @@
 services:
   db:
-    image: postgres:16
+    image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: license_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -19,18 +19,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://postgres:1234@db:5432/license_db
-    networks:
-      - app-network
-
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./license-nginx.conf:/etc/nginx/license-nginx.conf
-    ports:
-      - "80:80"
-    depends_on:
-      - web
+      DATABASE_URL: postgresql://postgres:1234@db:5433/license_db
     networks:
       - app-network
 
