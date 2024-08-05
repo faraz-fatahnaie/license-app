@@ -18,7 +18,7 @@ async def create_license_endpoint(request: CreateLicenseRequest,
                                   req: Request,
                                   db: Session = Depends(get_db)):
     try:
-        REG_API_KEY = req.headers['REG']
+        REG_API_KEY = req.headers['reg_apikey']
     except Exception as e:
         print(f'Wrong Header: {e}')
         raise HTTPException(status_code=401, detail="API key missing")
@@ -44,7 +44,7 @@ async def activate_license_endpoint(request: ActivateLicenseRequest,
                                     req: Request,
                                     db: Session = Depends(get_db)):
     try:
-        API_KEY = req.headers['ACT']
+        API_KEY = req.headers['apikey']
     except Exception as e:
         print(f'Wrong Header: {e}')
         raise HTTPException(status_code=401, detail="API key missing")
