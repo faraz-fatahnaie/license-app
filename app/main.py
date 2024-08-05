@@ -60,6 +60,10 @@ async def activate_license_endpoint(request: ActivateLicenseRequest,
     if not license:
         raise HTTPException(status_code=404, detail="License not found")
 
+    if license.hardware_unique_id is not None:
+        if license.hardware_unique_id != hardware_unique_id:
+            raise HTTPException(status_code=400, detail="License is activated on another device.")
+
     if license.status == 'active':
         return {"status": "success",
                 "message": "License already activated",
