@@ -83,7 +83,7 @@ async def activate_license_endpoint(request: ActivateLicenseRequest,
             "message": "License activated and hardware ID linked",
             "start_date": curr_datetime,
             "duration": license.duration,
-            "expiry_date": license.expiry_date}
+            "expiry_date": license.expiry_date}, 201
 
 
 @app.post("/api/validate_license")
