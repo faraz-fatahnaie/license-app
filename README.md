@@ -35,7 +35,7 @@
 1. **Start the FastAPI application:**
 
     ```sh
-    uvicorn main:app --reload
+    uvicorn app.main:app --reload
     ```
 
     This will start the application on `http://127.0.0.1:8000`.
