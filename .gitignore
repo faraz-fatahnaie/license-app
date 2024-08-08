@@ -16,3 +16,8 @@ app/alembic/versions/*
 !app/alembic/env.py
 !app/alembic/script.py.mako
 !app/alembic.ini
+
+
+venv/
+alembic/
+alembic.ini
