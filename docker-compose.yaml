@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=license_db
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  license-app:
+    image: license-app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+mysqlconnector://root:1234@db:3306/license_db
+      - API_KEY=e8535b40a360e938330aaf7409e0b44def8778923c76318a7edd6ee3949b8b9b
+      - REG_API_KEY=1a3e2ad26b6a60e9bfd50a0c814c495d5cf1d0431a177db54b257df9928a54b2
+    depends_on:
+      db:
+          condition: service_healthy
