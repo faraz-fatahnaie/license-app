@@ -20,4 +20,4 @@ app/alembic/versions/*
 
 venv/
 alembic/
-alembic.ini
+alembic
