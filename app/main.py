@@ -135,3 +135,42 @@ async def validate_license_endpoint(request: ValidateLicenseRequest,
             "message": f"License has {remaining_days} days remaining",
             "license_state": activate_state,
             "remaining_days": remaining_days}
+
+
+@app.post("/api/license_inquiry")
+async def validate_license_endpoint(request: ValidateLicenseRequest,
+                                    req: Request,
+                                    db: Session = Depends(get_db)):
+    try:
+        API_KEY = req.headers['api-key']
+    except Exception as e:
+        print(f'Wrong Header: {e}')
+        raise HTTPException(status_code=401, detail="API key missing")
+
+    api_key = os.getenv('API_KEY')
+    if api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    activation_code = request.activation_code
+
+    license = get_license_by_activation_code(db, activation_code)
+    curr_datetime = datetime.now().isoformat()
+
+    if not license:
+        raise HTTPException(status_code=404, detail="License not found")
+
+    if license.status == 'inactive':
+        raise HTTPException(status_code=400, detail="License is not activated yet")
+
+    activate_state, remaining_days = compare_dates(curr_datetime, expiry_date)
+
+    if not activate_state:
+        return {"status": "success",
+                "message": "License is expired",
+                "license_state": activate_state,
+                "remaining_days": remaining_days}
+
+    return {"status": "success",
+            "message": f"License has {remaining_days} days remaining",
+            "license_state": activate_state,
+            "remaining_days": remaining_days}
