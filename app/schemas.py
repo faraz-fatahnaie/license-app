@@ -15,3 +15,6 @@ class ValidateLicenseRequest(BaseModel):
     activation_code: str
     hardware_unique_id: str
     expiry_date: str
+
+class InquiryLicenseRequest(BaseModel):
+    activation_code: str

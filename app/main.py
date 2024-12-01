@@ -138,7 +138,7 @@ async def validate_license_endpoint(request: ValidateLicenseRequest,
 
 
 @app.post("/api/license_inquiry")
-async def validate_license_endpoint(request: ValidateLicenseRequest,
+async def validate_license_endpoint(request: InquiryLicenseRequest,
                                     req: Request,
                                     db: Session = Depends(get_db)):
     try:
